@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===================== DARK MODE (default) ===================== */
+:root {
+  --bg: #050520;
+  --bg2: #0d0d3b;
+  --card: rgba(13,13,59,0.55);
+  --border: rgba(168,85,247,0.15);
+  --text: #f0f0ff;
+  --text2: rgba(240,240,255,0.55);
+  --text3: rgba(240,240,255,0.3);
+  --cyan: #00d4ff;
+  --purple: #a855f7;
+  --pink: #ec4899;
+  --emerald: #10b981;
+}
+
+/* ===================== LIGHT MODE ===================== */
+.light {
+  --bg: #f4f4fe;
+  --bg2: #eaeaf8;
+  --card: rgba(255,255,255,0.85);
+  --border: rgba(99,60,180,0.12);
+  --text: #0d0d2e;
+  --text2: rgba(13,13,46,0.65);
+  --text3: rgba(13,13,46,0.4);
+  --cyan: #0099cc;
+  --purple: #7c3aed;
+  --pink: #db2777;
+  --emerald: #059669;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ---- Custom cursor ---- */
+.cursor-dot {
+  width: 8px; height: 8px;
+  background: var(--cyan);
+  border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 99999;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 34px; height: 34px;
+  border: 1.5px solid rgba(168,85,247,0.5);
+  border-radius: 50%;
+  position: fixed; pointer-events: none; z-index: 99998;
+  transition: transform 0.2s ease, border-color 0.3s;
+}
+.light .cursor-ring { border-color: rgba(124,58,237,0.4); }
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 2px; }
+
+::selection { background: rgba(168,85,247,0.25); color: var(--text); }
+
+/* ---- Noise overlay ---- */
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:1; opacity:0.3;
+}
+.light body::before { opacity: 0.08; }
+
+/* ---- Glass card ---- */
+.glass {
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+.light .glass {
+  box-shadow: 0 4px 24px rgba(99,60,180,0.08);
+}
+
+/* ---- Gradient text ---- */
+.grad-text {
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 50%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.light .grad-text {
+  background: linear-gradient(135deg, #0099cc 0%, #7c3aed 50%, #db2777 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---- Gradient border button ---- */
+.btn-grad {
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  color: white;
+  position: relative; overflow: hidden;
+}
+.btn-grad::after {
+  content:''; position:absolute; top:-50%; left:-150%;
+  width:80%; height:200%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s;
+}
+.btn-grad:hover::after { left:150%; }
+.light .btn-grad { box-shadow: 0 4px 20px rgba(124,58,237,0.3); }
+
+/* ---- Animated gradient border ---- */
+.animated-border::before {
+  content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink), var(--cyan));
+  background-size: 300% 300%;
+  animation: borderRotate 4s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+@keyframes borderRotate { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+/* ---- Nav link underline ---- */
+.nav-link { position:relative; transition:color 0.3s; }
+.nav-link::after {
+  content:''; position:absolute; bottom:-3px; left:0; width:0; height:1.5px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  transition: width 0.3s;
+}
+.nav-link:hover::after { width:100%; }
+
+/* ---- Input ---- */
+.edu-input {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  width: 100%; outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.edu-input::placeholder { color: var(--text3); }
+.edu-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(168,85,247,0.1); }
+.light .edu-input { background: white; border-color: rgba(124,58,237,0.15); }
+.light .edu-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.08); }
+
+/* ---- Marquee ---- */
+@keyframes marqueeL { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@keyframes marqueeR { from{transform:translateX(-50%)} to{transform:translateX(0)} }
+.marquee-l { animation: marqueeL 30s linear infinite; }
+.marquee-r { animation: marqueeR 30s linear infinite; }
+
+/* ---- OTP input ---- */
+.otp-box {
+  width: 52px; height: 58px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+.otp-box:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.15), 0 0 20px rgba(168,85,247,0.3);
+  transform: scale(1.05);
+}
+.otp-box.filled {
+  border-color: var(--cyan);
+  background: rgba(0,212,255,0.05);
+}
+.light .otp-box { background: white; border-color: rgba(124,58,237,0.15); color: #0d0d2e; }
+.light .otp-box:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+
+/* ---- Feature card hover ---- */
+.feat-card { transition: transform 0.3s, box-shadow 0.3s; }
+.feat-card:hover { transform: translateY(-6px); }
+.light .feat-card:hover { box-shadow: 0 20px 60px rgba(124,58,237,0.12); }
+
+/* ---- Learning module tab ---- */
+.tab-btn { transition: all 0.25s; }
+.tab-btn.active { background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(168,85,247,0.15)); }
+.light .tab-btn.active { background: linear-gradient(135deg, rgba(0,153,204,0.12), rgba(124,58,237,0.12)); }
+
+/* ---- Progress bar ---- */
+.prog-bar {
+  height: 6px; border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ---- Dialog ---- */
+[data-radix-dialog-overlay] {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(2,2,15,0.8);
+  backdrop-filter: blur(8px);
+}
+.light [data-radix-dialog-overlay] { background: rgba(240,240,250,0.7); }
+
+@keyframes dialogIn {
+  from { opacity:0; transform:translate(-50%,-48%) scale(0.95); }
+  to   { opacity:1; transform:translate(-50%,-50%) scale(1); }
+}
+
+/* ---- Orbs ---- */
+.orb { position:absolute; border-radius:50%; filter:blur(70px); pointer-events:none; }
+
+/* ---- Light mode section backgrounds ---- */
+.light section { background: transparent; }
+.light .section-alt { background: rgba(124,58,237,0.03); }
+
+/* ---- Testimonial ---- */
+.testi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.testi-card:hover { border-color: var(--cyan); transform: translateY(-4px); }
+.light .testi-card { background: white; box-shadow: 0 4px 24px rgba(99,60,180,0.07); }
+
+/* ---- Document card ---- */
+.doc-card { transition: all 0.3s; }
+.doc-card:hover { transform: scale(1.02); }
+
+/* ---- Spinner ---- */
+.spin { animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

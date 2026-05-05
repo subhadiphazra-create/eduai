@@ -1,0 +1,89 @@
+# ─────────────────────────────────────────────────────────
+#  PRODUCTION / SERVER PROFILE
+#  Activate with: --spring.profiles.active=server
+#  All secrets must be injected via environment variables.
+#  NEVER hardcode credentials in this file.
+# ─────────────────────────────────────────────────────────
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            - StripPrefix=0
+
+        - id: task-service
+          uri: ${TASK_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/tasks/**
+          filters:
+            - StripPrefix=0
+
+        - id: mail-service
+          uri: ${MAIL_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/mail/**
+          filters:
+            - StripPrefix=0
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - ${ALLOWED_ORIGINS}
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 2
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+  refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: WARN
+    com.starter.gateway: INFO
+    org.springframework.cloud.gateway: WARN
+    org.springframework.security: WARN
